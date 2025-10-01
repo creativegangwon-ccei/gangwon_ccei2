@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>스마트한 대표님을 위한 AI 프롬프트 가이드</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', 'Inter', sans-serif;
+            background-color: #FDFBF7;
+        }
+        
+        .prompt-card strong {
+            color: #944667;
+        }
+        
+        .intro-link {
+            color: #944667;
+        }
+
+        .highlight-text {
+            color: #594D86;
+        }
+
+        .title-subtext {
+            color: #944667;
+        }
+
+        .new-color-link {
+            color: #594D86;
+        }
+
+        .nav-active {
+            border-bottom: 2px solid #4A5568;
+            color: #2D3748;
+            font-weight: 600;
+        }
+
+        .filter-btn-active {
+            background-color: #4A5568;
+            color: #FFFFFF;
+        }
+
+        .prompt-card {
+            transition: all 0.3s ease;
+            border: 1px solid #E2E8F0;
+        }
+
+        .prompt-card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transform: translateY(-5px);
+        }
+
+        .copy-feedback {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0,0,0,0.7);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .copy-feedback.show {
+            opacity: 1;
+        }
+
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-top: 4px solid #4A5568;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .ai-response-container {
+            position: relative;
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #f7f7f7;
+            border-radius: 0.5rem;
+            border: 1px dashed #E2E8F0;
+            max-height: 10rem;
+            overflow-y: auto;
+        }
+
+        .tool-icon {
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .tool-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 24px;
+            height: 24px;
+            background-color: #E2E8F0;
+            color: #4A5568;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .close-btn:hover {
+            background-color: #CBD5E0;
+        }
+        
+    </style>
+</head>
+<body class="bg-stone-50 text-gray-800">
+
+    <header class="bg-white shadow-sm sticky top-0 z-10">
+        <div class="container mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center">
+            <!-- 로고와 텍스트 전체를 감싸는 링크 태그 추가 -->
+            <a href="/" class="flex items-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-600" viewBox="0 0 24 24">
+                    <defs>
+                        <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#e53e3e;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#0056b3;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M13 10V3L4 14h7v7l9-11h-7z" fill="url(#logoGradient)" />
+                </svg>
+                <div>
+                    <h1 class="text-xl font-bold text-gray-800">쉽게 골라쓰는 AI 프롬프트</h1>
+                    <p class="text-sm text-gray-500">강원창조경제혁신센터</p>
+                </div>
+            </a>
+            <nav id="main-nav" class="flex space-x-4 sm:space-x-6 border-b sm:border-b-0 pb-2 sm:pb-0">
+                <button data-target="page-intro" class="nav-button nav-active text-gray-600 hover:text-gray-900 transition">소개</button>
+                <button data-target="page-industry" class="nav-button text-gray-600 hover:text-gray-900 transition">업종별</button>
+                <button data-target="page-situation" class="nav-button text-gray-600 hover:text-gray-900 transition">상황별</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 sm:p-8">
+        
+        <div id="page-intro" class="page-content">
+            <div class="bg-white p-8 rounded-xl shadow-md text-center">
+                <h2 class="text-3xl font-bold mb-4 intro-title"><span class="highlight-text">스마트한 대표님</span><span class="title-subtext">을 위한 AI 프롬프트 가이드</span></h2>
+                <p id="easter-egg-trigger" class="text-center max-w-3xl mx-auto text-gray-700 leading-relaxed mb-4 cursor-pointer">
+                    AI는 이제 어려운 기술이 아닌, 대표님의 든든한 비서가 될 수 있습니다. 본 가이드에 담긴 다양한 프롬프트 예시를 통해 가게 홍보, 메뉴 개발, 고객 관리 등 다양한 업무의 효율성을 높일 수 있습니다. 상단의 '업종별', '상황별' 탭을 눌러 지금 바로 시작해보세요!
+                </p>
+                <!-- 이스터에그 메시지가 표시될 영역 -->
+                <div id="easter-egg-message" class="text-center text-xl font-bold text-indigo-600 mb-6 hidden">
+                    하이하이하와유나이스미튜
+                </div>
+                <!-- 추가된 안내 문구 박스 -->
+                <div class="bg-white p-8 rounded-xl shadow-md text-center mb-12">
+                    <p class="text-gray-700"><strong>🔔 가이드 사용법 🔔</strong><br>1. 업종별, 상황별에서 필요한 프롬프트를 재빠르게 복사하세요.<br>
+                    2. 아래의 AI 도구들 중 하나를 골라 복사한 내용을 붙여넣으세요.<br> 
+                    3. 프롬프트의 "___" 부분을 상황에 맞게 수정하여 입력하세요.<br>
+                    4. AI가 제공하는 결과값을 확인하세요.<br>
+                    5. 필요에 따라 '이미지를 제공해주세요', '숏폼을 만들어주세요' 등 후속요청을 통하여 콘텐츠를 확장시키세요.<br>
+                    <br>
+                    ⭐ 유형별 정렬을 통해 숏, 롱, 이미지 버전을 확인할 수 있습니다. <br>
+                    ⭐ C와 G버튼은 AI 도구 Chat GPT와 Gemini를 사용했을 때, 나오는 프롬프트 예시 버튼입니다. </p>
+                </div>
+                <!-- /추가된 안내 문구 박스 -->
+
+                <section id="ai-tools-intro-section">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="bg-white p-6 rounded-xl shadow-md">
+                            <a href="https://chat.openai.com/" target="_blank" class="font-bold text-xl intro-link new-color-link mb-2 block hover:underline">
+                                <h3>ChatGPT</h3>
+                            </a>
+                            <p class="text-stone-700 leading-relaxed">글쓰기, 기획, 아이디어 발굴 등 범용적인 텍스트 작업에 최적화되어 있습니다. 마케팅 문구, 블로그 글 초안 작성에 유용합니다.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-md">
+                            <a href="https://gemini.google.com/" target="_blank" class="font-bold text-xl intro-link mb-2 block hover:underline">
+                                <h3>Gemini</h3>
+                            </a>
+                            <p class="text-stone-700 leading-relaxed">텍스트는 물론 이미지, 영상 등 다양한 형식의 정보를 동시에 처리할 수 있어, 복잡한 자료를 분석하거나 새로운 콘텐츠를 구상하는 데 효과적입니다.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-md">
+                            <a href="https://www.perplexity.ai/" target="_blank" class="font-bold text-xl intro-link new-color-link mb-2 block hover:underline">
+                                <h3>Perplexity</h3>
+                            </a>
+                            <p class="text-stone-700 leading-relaxed">AI와 웹 검색을 결합하여 정확하고 신뢰성 높은 정보를 제공합니다. 시장 조사, 최신 트렌드 파악 등 사실 확인이 중요한 작업에 좋습니다.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-md">
+                            <a href="https://pixabay.com/" target="_blank" class="font-bold text-xl intro-link mb-2 block hover:underline">
+                            <h3>Pixabay</h3>
+                        </a>
+                        <p class="text-stone-700 leading-relaxed">고품질의 무료 이미지, 비디오, 음악 등을 제공합니다. 상업적 용도로도 자유롭게 사용할 수 있어, 홍보 자료나 웹사이트 디자인에 유용합니다.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <a href="https://www.bing.com/images/create" target="_blank" class="font-bold text-xl intro-link new-color-link mb-2 block hover:underline">
+                            <h3>Bing Image Creator</h3>
+                        </a>
+                        <p class="text-stone-700 leading-relaxed">텍스트 설명을 기반으로 고품질 이미지를 생성합니다.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <a href="https://www.canva.com/ai-assistant/" target="_blank" class="font-bold text-xl intro-link mb-2 block hover:underline">
+                            <h3>Canva</h3>
+                        </a>
+                        <p class="text-stone-700 leading-relaxed">디자인 전문가가 아니어도 쉽게 카드뉴스, 전단지 등을 만들 수 있습니다. AI 기반의 '매직 스튜디오' 기능을 활용해 디자인을 자동화할 수 있습니다.</p>
+                    </div>
+                </div>
+            </section>
+            
+        </div>
+    </div>
+    
+    
+    <div id="page-industry" class="page-content hidden">
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-6">
+            <div id="industry-filters" class="flex flex-wrap gap-2"></div>
+            <div class="relative w-48">
+                <select id="industry-sort-by-type" class="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded-full leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                    <option value="all">유형별 정렬</option>
+                    <option value="숏">숏</option>
+                    <option value="롱">롱</option>
+                    <option value="이미지">이미지</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95a1 1 0 001.414 0l3.536-3.536a.5.5 0 00-.354-.854H6.107a.5.5 0 00-.354.854l3.536 3.536z"/></svg>
+                </div>
+            </div>
+        </div>
+        <div id="industry-prompts" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Prompts will be dynamically inserted here -->
+        </div>
+        <!-- 하단 도구 박스 추가 -->
+        <div class="mt-12 bg-white p-8 rounded-xl shadow-md text-center" id="ai-tools-industry-section">
+            <h2 class="text-2xl font-bold mb-4 highlight-text">⬇️아래의 AI 도구 중 하나를 골라 복사한 프롬프트를 붙여넣고, 결과값을 확인하세요.<br>(도구 이름을 누르시면 해당 페이지로 이동합니다)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <a href="https://chat.openai.com/" target="_blank" class="font-bold text-xl intro-link new-color-link mb-2 block hover:underline">
+                        <h3>ChatGPT</h3>
+                    </a>
+                    <p class="text-stone-700 leading-relaxed">글쓰기, 기획, 아이디어 발굴 등 범용적인 텍스트 작업에 최적화되어 있습니다.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <a href="https://gemini.google.com/" target="_blank" class="font-bold text-xl intro-link mb-2 block hover:underline">
+                        <h3>Gemini</h3>
+                    </a>
+                    <p class="text-stone-700 leading-relaxed">텍스트는 물론 이미지, 영상 등 다양한 형식의 정보를 동시에 처리할 수 있어, 복잡한 자료를 분석하거나 새로운 콘텐츠를 구상하는 데 효과적입니다.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <a href="https://www.perplexity.ai/" target="_blank" class="font-bold text-xl intro-link new-color-link mb-2 block hover:underline">
+                        <h3>Perplexity</h3>
+                    </a>
+                    <p class="text-stone-700 leading-relaxed">AI와 웹 검색을 결합하여 정확하고 신뢰성 높은 정보를 제공합니다.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <a href="https://pixabay.com/" target="_blank" class="font-bold text-xl intro-link mb-2 block hover:underline">
+                        <h3>Pixabay</h3>
+                    </a>
+                    <p class="text-stone-700 leading-relaxed">고품질의 무료 이미지, 비디오, 음악 등을 제공합니다.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <a href="https://www.bing.com/images/create" target="_blank" class="font-bold text-xl intro-link new-color-link mb-2 block hover:underline">
+                        <h3>Bing Image Creator</h3>
+                    </a>
+                    <p class="text-stone-700 leading-relaxed">텍스트 설명을 기반으로 고품질 이미지를 생성합니다.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <a href="https://www.canva.com/ai-assistant/" target="_blank" class="font-bold text-xl intro-link mb-2 block hover:underline">
+                        <h3>Canva</h3>
+                    </a>
+                    <p class="text-stone-700 leading-relaxed">디자인 전문가가 아니어도 쉽게 카드뉴스, 전단지 등을 만들 수 있습니다.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    <div id="page-situation" class="page-content hidden">
+        <div id="situation-filters" class="flex flex-wrap gap-2 mb-6 justify-center"></div>
+        <div id="situation-prompts" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        <!-- 하단 도구 박스 추가 -->
+        <div class="mt-12 bg-white p-8 rounded-xl shadow-md text-center" id="ai-tools-situation-section">
+            <h2 class="text-2xl font-bold mb-4 highlight-text">⬇️아래의 AI 도구 중 하나를 골라 복사한 프롬프트를 붙여넣고, 결과값을 확인하세요.<br>(도구 이름을 누르시면 해당 페이지로 이동합니다)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <a href="https://chat.openai.com/" target="_blank" class="font-bold text-xl intro-link new-color-link mb-2 block hover:underline">
+                        <h3>ChatGPT</h3>
+                    </a>
+                    <p class="text-stone-700 leading-relaxed">글쓰기, 기획, 아이디어 발굴 등 범용적인 텍스트 작업에 최적화되어 있습니다.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <a href="https://gemini.google.com/" target="_blank" class="font-bold text-xl intro-link mb-2 block hover:underline">
+                        <h3>Gemini</h3>
+                    </a>
+                    <p class="text-stone-700 leading-relaxed">텍스트는 물론 이미지, 영상 등 다양한 형식의 정보를 동시에 처리할 수 있어, 복잡한 자료를 분석하거나 새로운 콘텐츠를 구상하는 데 효과적입니다.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <a href="https://www.perplexity.ai/" target="_blank" class="font-bold text-xl intro-link new-color-link mb-2 block hover:underline">
+                        <h3>Perplexity</h3>
+                    </a>
+                    <p class="text-stone-700 leading-relaxed">AI와 웹 검색을 결합하여 정확하고 신뢰성 높은 정보를 제공합니다.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <a href="https://pixabay.com/" target="_blank" class="font-bold text-xl intro-link mb-2 block hover:underline">
+                        <h3>Pixabay</h3>
+                    </a>
+                    <p class="text-stone-700 leading-relaxed">고품질의 무료 이미지, 비디오, 음악 등을 제공합니다.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <a href="https://www.bing.com/images/create" target="_blank" class="font-bold text-xl intro-link new-color-link mb-2 block hover:underline">
+                        <h3>Bing Image Creator</h3>
+                    </a>
+                    <p class="text-stone-700 leading-relaxed">텍스트 설명을 기반으로 고품질 이미지를 생성합니다.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <a href="https://www.canva.com/ai-assistant/" target="_blank" class="font-bold text-xl intro-link mb-2 block hover:underline">
+                        <h3>Canva</h3>
+                    </a>
+                    <p class="text-stone-700 leading-relaxed">디자인 전문가가 아니어도 쉽게 카드뉴스, 전단지 등을 만들 수 있습니다.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </main>
+    
+    
+    <footer class="text-center p-6 mt-10 border-t border-gray-200">
+        <p class="text-sm text-gray-500 mb-2">이 가이드는 강원도 스타트업 기업과 소상공인, 예비 창업자를 위해 AI 비즈니스를 보다 쉽고 빠르게 활용할 수 있도록 제작되었습니다.<br>&copy; 2025 강원창조경제혁신센터. All rights reserved.</p>
+        <!-- Visitor Badge - 방문자 수 카운터 (가운데 정렬 적용) -->
+        <div class="mt-4 flex flex-col items-center">
+            <img src="https://hit-counter.soreine.dev/counter?page=creativegangwon-ccei.github.io.gangwon_ccei2&style=for-the-badge&label=Visitors&color=944667" alt="방문자 수" />
+        </div>
+    </footer>
+
+    <script>
+        const promptData = {
+            industry: [
+                { category: '카페 및 식음료', type: '숏', text: "우리 가게 신메뉴인 '강릉 흑임자라떼' 홍보 문구 3개 만들어 줘. 젊은 세대가 좋아할 만한 힙한 문체로 부탁해.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '카페 및 식음료', type: '롱', text: "나는 '양양 서핑' 콘셉트의 카페를 운영하고 있어. 최근 유행하는 비건 트렌드에 맞춰 '비건 디저트 메뉴 5가지'를 제안해 줘. 각 메뉴에 대한 간단한 레시피와 스토리를 포함해줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '카페 및 식음료', type: '이미지', text: "싱그러운 여름날 오후, 야외 테라스에 놓인 '강릉 흑임자라떼' 한 잔의 사진을 만들어 줘. 옆에는 감성적인 노트와 펜이 놓여있고, 배경은 푸른 바다가 보이는 풍경이야.", tools: [], generatedResponse: {PublicAI: null} },
+                { category: '카페 및 식음료', type: '숏', text: "메뉴판 디자인을 위한 문구 템플릿을 만들어 줘. '시그니처 메뉴', '스페셜티 커피', '계절 메뉴'를 구분해서 작성해 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '카페 및 식음료', type: '숏', text: "인스타그램 스토리로 활용할 우리 카페 '빙수' 메뉴 홍보 문구 3개 만들어 줘. 유머러스하고 재미있는 문체로 부탁해.", tools: ['Gemini'], generatedResponse: {Gemini: null} },
+                { category: '카페 및 식음료', type: '롱', text: "새로 출시할 '유기농 수제 쿠키'의 상세 페이지에 들어갈 소개 글을 작성해 줘. 제품의 특징(재료, 맛, 식감)과 구매 시 얻는 장점을 강조해줘.", tools: ['GPT'], generatedResponse: {GPT: null} },
+                { category: '카페 및 식음료', type: '이미지', text: "따뜻한 나무 테이블 위에 놓인 '따뜻한 라떼'와 '크루아상' 사진을 만들어 줘. 햇살이 창문으로 부드럽게 들어오는 오후 시간의 따스한 느낌이 나야 해.", tools: [], generatedResponse: {PublicAI: null} },
+                { category: '카페 및 식음료', type: '숏', text: "우리 가게의 여름 한정 메뉴인 '수박주스'를 홍보하는 광고 문구를 3가지 만들어 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '카페 및 식음료', type: '롱', text: "우리 가게 고객들을 위한 '커피 원두 보관법'에 대한 팁을 담은 블로그 포스트를 작성해 줘. 초보자도 이해하기 쉽게 단계별로 설명해 줘.", tools: ['GPT'], generatedResponse: {GPT: null} },
+                { category: '카페 및 식음료', type: '숏', text: "우리 카페의 '모닝 세트 메뉴'를 홍보하는 인스타그램 게시글 3개 작성해줘. '든든한 아침'이라는 키워드를 넣어줘.", tools: ['GPT', 'Gemini'], generatedResponse: {GPT: null, Gemini: null}},
+                { category: '카페 및 식음료', type: '롱', text: "나는 '춘천'에서 작은 북카페를 운영하고 있어. '우리 가게의 책과 커피 이야기'라는 주제로 블로그 포스트를 작성해줘. 가게의 철학과 분위기를 잘 드러내줘.", tools: ['GPT', 'Gemini'], generatedResponse: {GPT: null, Gemini: null}},
+                { category: '카페 및 식음료', type: '롱', text: "우리 카페의 3월 한 달 동안 '인스타그램 콘텐츠'를 기획해 줘. '봄 신메뉴', '화이트데이 이벤트'를 포함하고 주차별 계획을 세워줘.", tools: ['GPT', 'Gemini'], generatedResponse: {GPT: null, Gemini: null}},
+                { category: '카페 및 식음료', type: '이미지', text: "다양한 종류의 '수제 디저트'가 예쁜 접시에 담겨있는 사진을 만들어 줘. 디저트마다 먹음직스러운 모습이 강조되어야 해.", tools: [], generatedResponse: {PublicAI: null}},
+                { category: '카페 및 식음료', type: '이미지', text: "벚꽃이 만개한 봄날, 벚꽃이 들어간 '핑크 라떼'를 손에 들고 찍은 사진을 만들어 줘. 배경에는 흩날리는 벚꽃잎이 보여.", tools: [], generatedResponse: {PublicAI: null}},
+                { category: '카페 및 식음료', type: '이미지', text: "바리스타가 고객 앞에서 '라떼 아트'를 만들고 있는 모습을 그려줘. 집중하고 있는 바리스타의 손과 우유 거품이 섬세하게 표현되어야 해.", tools: [], generatedResponse: {PublicAI: null}},
+                { category: '숙박 및 여행 서비스', type: '숏', text: "우리 펜션의 '별 보기 체험' 이벤트를 홍보하는 인스타그램 게시글을 작성해 줘. '단풍나무 아래서 즐기는 낭만'이라는 키워드를 꼭 넣어줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '숙박 및 여행 서비스', type: '숏', text: "우리 민박의 '조식 서비스'를 홍보하는 문구 3가지를 작성해 줘. '엄마의 손맛', '든든한 한 끼'라는 키워드를 넣어줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '숙박 및 여행 서비스', type: '숏', text: "가족 단위 고객을 위한 펜션의 '키즈룸'을 홍보하는 문구 2가지를 작성해 줘.", tools: ['Gemini'], generatedResponse: {Gemini: null} },
+                { category: '숙박 및 여행 서비스', type: '숏', text: "반려동물 동반 가능한 펜션임을 강조하는 인스타그램 게시글 3개 작성해 줘. '멍캉스', '댕댕이와 함께'라는 키워드를 넣어줘.", tools: ['GPT', 'Gemini'], generatedResponse: {GPT: null, Gemini: null} },
+                { category: '숙박 및 여행 서비스', type: '숏', text: "제주도 '한 달 살기' 프로그램을 홍보하는 문구 3가지를 작성해줘. '나만의 워크케이션', '힐링', '휴식' 등의 키워드를 포함해줘.", tools: ['GPT', 'Gemini'], generatedResponse: {GPT: null, Gemini: null} },
+                { category: '숙박 및 여행 서비스', type: '롱', text: "나는 '춘천'에서 '강변 자전거 여행' 테마의 게스트하우스를 운영하고 있어. '2박 3일 춘천 감성 여행 코스'를 기획해 줘. 주요 방문지, 추천 맛집, 예상 경비를 포함해서 자세히 알려줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '숙박 및 여행 서비스', type: '롱', text: "강원도 '정동진'에 위치한 해돋이 명소 펜션을 운영 중이야. '새해맞이 해돋이 여행'을 위한 블로그 홍보 글을 작성해 줘. '일출 시간', '준비물', '펜션 이벤트' 내용을 포함해줘.", tools: ['GPT'], generatedResponse: {GPT: null} },
+                { category: '숙박 및 여행 서비스', type: '롱', text: "강원도 '정선'에서 운영하는 '프라이빗 글램핑장'의 상세 페이지에 들어갈 소개글을 작성해 줘. '별빛 아래 바비큐', '프라이빗 족욕 스파' 등의 특징을 강조해 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {GPT: null, Gemini: null} },
+                { category: '숙박 및 여행 서비스', type: '롱', text: "지속가능한 '강릉 서핑 여행' 가이드 블로그 포스트를 작성해 줘. '플로깅', '친환경 서핑샵' 등의 정보를 포함해 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {GPT: null, Gemini: null} },
+                { category: '숙박 및 여행 서비스', type: '롱', text: "강원도 '평창'의 '겨울 스키 여행'에 대한 블로그 글을 작성해 줘. '초보자를 위한 스키 팁', '맛집', '숙소 추천' 등 상세한 정보를 포함해줘.", tools: ['GPT', 'Gemini'], generatedResponse: {GPT: null, Gemini: null} },
+                { category: '숙박 및 여행 서비스', type: '이미지', text: "동화 같은 분위기의 한옥 펜션을 그려줘. 펜션 앞마당에는 한복을 입은 커플이 앉아있고, 배경에는 단풍이 든 설악산이 보여.", tools: [], generatedResponse: {PublicAI: null} },
+                { category: '숙박 및 여행 서비스', type: '이미지', text: "겨울 아침, '해돋이 명소 펜션'의 창문으로 떠오르는 붉은 태양이 비치는 장면을 만들어 줘. 펜션 내부에는 따뜻하고 아늑한 분위기가 연출되어 있어.", tools: [], generatedResponse: {PublicAI: null} },
+                { category: '숙박 및 여행 서비스', type: '이미지', text: "따뜻한 햇살이 드는 '반려견 동반 펜션'의 거실에서, 창밖을 바라보는 강아지와 그 옆에서 책을 읽는 사람의 모습을 그려줘. 편안하고 행복한 분위기야.", tools: [], generatedResponse: {PublicAI: null} },
+                { category: '숙박 및 여행 서비스', type: '이미지', text: "강원도 '글램핑장'에서 텐트 밖으로 보이는 밤하늘의 별을 그려줘. 텐트 안에는 따뜻한 조명과 함께 낭만적인 분위기가 연출되어 있어.", tools: [], generatedResponse: {PublicAI: null} },
+                { category: '숙박 및 여행 서비스', type: '이미지', text: "겨울 '스키장'의 설원 위에서 스키 장비를 착용하고 환하게 웃고 있는 사람의 모습을 그려줘. 배경에는 푸른 하늘과 눈 덮인 산이 보여.", tools: [], generatedResponse: {PublicAI: null} },
+                { category: '소매 및 온라인 판매', type: '숏', text: "우리 가게의 신상 '속초 오징어순대'를 알리는 팝업스토어 홍보 문구 2개 만들어 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '소매 및 온라인 판매', type: '숏', text: "온라인 쇼핑몰에서 '이번 주 특가 상품'을 홍보하는 배너 문구 4개를 작성해 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '소매 및 온라인 판매', type: '숏', text: "인스타그램 릴스에서 '언박싱' 영상에 사용할 스크립트를 작성해 줘. '친환경 포장재'와 '감성적인 메시지'를 강조해줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '소매 및 온라인 판매', type: '숏', text: "고객 맞춤형 '추천 상품'을 제안하는 메시지 3가지를 작성해 줘. '피부 타입'과 '취향'을 고려하는 문구로 작성해 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '소매 및 온라인 판매', type: '숏', text: "'라이브 커머스' 방송에서 사용할 오프닝 멘트와 시청자 참여 유도 문구 3개를 만들어 줘. '실시간 혜택'과 '소통'을 강조해줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '소매 및 온라인 판매', type: '롱', text: "나는 '강원도 감자'를 활용한 간식 제품을 만들고 싶어. '아이들을 위한 건강 간식' 콘셉트로 제품 아이디어 3가지와 각 제품의 상세페이지에 들어갈 '제품 소개 문구'를 작성해 줘. ", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '소매 및 온라인 판매', type: '롱', text: "강원도 '횡성 한우'를 판매하는 온라인 쇼핑몰을 운영 중이야. '최상급 한우 구별법'에 대한 정보를 담은 블로그 글을 작성해 줘. 고객에게 신뢰를 줄 수 있는 전문적인 내용으로 구성해줘.", tools: ['GPT'], generatedResponse: {GPT: null} },
+                { category: '소매 및 온라인 판매', type: '롱', text: "'친환경 유기농 잼'을 판매하는 브랜드의 '브랜드 스토리'를 작성해 줘. '재료', '제조 과정', '환경에 대한 가치관'을 담아 고객의 공감을 이끌어낼 수 있도록 해줘.", tools: ['GPT', 'Gemini'], generatedResponse: {GPT: null, Gemini: null} },
+                { category: '소매 및 온라인 판매', type: '롱', text: "우리 '온라인 쇼핑몰'의 '상품 분류 체계'를 개선하고 싶어. '여름 신상 의류'를 기준으로 '카테고리명'과 '필터 기능'을 제안해 줘. 고객의 구매 여정을 고려해서 만들어줘.", tools: ['GPT', 'Gemini'], generatedResponse: {GPT: null, Gemini: null} },
+                { category: '소매 및 온라인 판매', type: '롱', text: "우리 가게에서 판매하는 '수제 향수'의 상세 페이지에 들어갈 '제품 설명'을 작성해 줘. 각 향의 '노트', '지속 시간', '추천하는 상황'을 자세히 설명해 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {GPT: null, Gemini: null} },
+                { category: '소매 및 온라인 판매', type: '이미지', text: "맛있는 감자칩이 쌓여있는 사진을 그려줘. 감자칩 위에는 신선한 감자 조각이 놓여있고, 배경에는 강원도의 푸른 산과 맑은 하늘이 보여.", tools: [], generatedResponse: {PublicAI: null} },
+                { category: '소매 및 온라인 판매', type: '이미지', text: "한우 스테이크가 불판 위에서 맛있게 익어가는 모습을 근접 촬영한 사진을 만들어 줘. 스테이크 주변에는 신선한 채소와 허브가 놓여있어.", tools: [], generatedResponse: {PublicAI: null} },
+                { category: '소매 및 온라인 판매', type: '이미지', text: "라이브 커머스 방송 스튜디오에서 방송인이 제품을 들고 시청자들과 소통하는 활기찬 모습을 그려줘. 배경에는 다양한 제품들이 진열되어 있어.", tools: [], generatedResponse: {PublicAI: null} },
+                { category: '소매 및 온라인 판매', type: '이미지', text: "'친환경 종이 패키지'에 담긴 '수제 비누' 사진을 만들어 줘. 비누 주변에는 자연 소재의 장식물이 놓여있어. 자연 친화적인 느낌이 나야 해.", tools: [], generatedResponse: {PublicAI: null} },
+                { category: '소매 및 온라인 판매', type: '이미지', text: "'수제 향수'가 놓여있는 감성적인 화장대 사진을 만들어 줘. 햇살이 창문으로 들어와서 은은한 분위기를 연출하고 있어. 배경은 깔끔한 흰색이야.", tools: [], generatedResponse: {PublicAI: null} },
+                { category: '제조 및 유통업', type: '숏', text: "우리 공장의 '친환경 생산' 과정을 강조하는 홍보 문구 3개를 만들어 줘. '재활용', '에너지 절감'을 키워드로 넣어줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '제조 및 유통업', type: '숏', text: "B2B 고객을 위한 우리 '도매 상품'의 장점을 부각하는 메시지 3가지를 작성해 줘. '경쟁력 있는 가격'과 '신속한 배송'을 강조해 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '제조 및 유통업', type: '숏', text: "우리 '자체 제작' 의류 브랜드의 신상 '티셔츠'를 홍보하는 인스타그램 게시글을 3가지 작성해 줘. '편안한 착용감', '트렌디한 디자인'을 강조해 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '제조 및 유통업', type: '숏', text: "우리 '수제 맥주 양조장'의 '가을 한정 맥주'를 홍보하는 문구 2개를 만들어 줘. '풍부한 맛', '깊은 향'을 키워드로 넣어줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '제조 및 유통업', type: '숏', text: "우리 '식품 제조 공장'의 '위생 관리 시스템'을 알리는 홍보 문구 2개를 만들어 줘. '깨끗한 환경', '안전한 먹거리'를 강조해 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '제조 및 유통업', type: '롱', text: "우리 공장의 '친환경 생산' 과정을 소개하는 '카드뉴스' 스크립트를 작성해 줘. 단계별로 '원자재', '제작', '포장' 과정을 설명하고, 이미지를 포함할 수 있게 묘사해줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '제조 및 유통업', type: '롱', text: "우리 '농산물 유통업체'의 '농장 직거래 시스템'을 소개하는 블로그 포스트를 작성해 줘. '신선함', '합리적인 가격', '농가와의 상생'을 강조해 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {GPT: null, Gemini: null} },
+                { category: '제조 및 유통업', type: '롱', text: "나는 '수제 가죽 지갑'을 제작하고 있어. '나만의 가죽 지갑 만들기' 원데이 클래스 프로그램을 기획해 줘. '커리큘럼', '소요 시간', '재료비' 등 상세 정보를 포함해줘.", tools: ['GPT', 'Gemini'], generatedResponse: {GPT: null, Gemini: null} },
+                { category: '제조 및 유통업', type: '롱', text: "우리 '전통 주조장'의 '브랜드 스토리'를 작성해 줘. '가족의 전통', '지역 농산물 사용', '장인 정신'을 담아 고객의 공감을 이끌어낼 수 있도록 해줘.", tools: ['GPT', 'Gemini'], generatedResponse: {GPT: null, Gemini: null} },
+                { category: '제조 및 유통업', type: '롱', text: "우리 '식품 제조 공장'의 '품질 관리 시스템'을 소개하는 '안내문'을 작성해 줘. '청결', '안전', '최신 설비'를 강조하고, 고객이 안심할 수 있는 내용을 담아줘.", tools: ['GPT', 'Gemini'], generatedResponse: {GPT: null, Gemini: null} },
+                { category: '제조 및 유통업', type: '이미지', text: "현대적이고 깨끗한 '식품 제조 공장' 내부를 그려줘. 작업복을 입은 직원들이 위생적으로 제품을 포장하고 있는 장면이야.", tools: [], generatedResponse: {PublicAI: null} },
+                { category: '제조 및 유통업', type: '이미지', text: "수제 맥주 양조장'에서, 장인이 전통 방식으로 맥주를 빚고 있는 모습을 그려줘. 배경에는 커다란 맥주 통과 신선한 재료들이 보여.", tools: [], generatedResponse: {PublicAI: null} },
+                { category: '제조 및 유통업', type: '이미지', text: "다양한 종류의 '전통 주'가 진열되어 있는 '주조장'의 실내를 그려줘. 따뜻한 조명 아래 술병들이 은은하게 빛나고 있어.", tools: [], generatedResponse: {PublicAI: null} },
+                { category: '제조 및 유통업', type: '이미지', text: "푸른 하늘 아래, 농부들이 '신선한 농산물'을 수확하고 있는 모습을 그려줘. '농장 직거래'의 신선함을 강조하는 느낌이야.", tools: [], generatedResponse: {PublicAI: null} },
+                { category: '제조 및 유통업', type: '이미지', text: "'핸드메이드 가죽 지갑'을 만드는 작업 공간을 그려줘. 정교한 도구들이 놓여있고, 한 사람이 가죽을 꿰매고 있어. 빈티지하고 아늑한 분위기야.", tools: [], generatedResponse: {PublicAI: null} },
+                { category: '뷰티 및 서비스업', type: '숏', text: "우리 숍의 '헤어 컬러 전문가' 서비스에 대한 홍보 문구 2개 만들어 줘. '개인 맞춤형 컬러'와 '전문가 상담'을 강조해 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '뷰티 및 서비스업', type: '숏', text: "우리 뷰티 숍의 '환절기 스킨케어' 이벤트를 알리는 인스타그램 게시글 3개 작성해 줘. '수분 충전', '피부 진정' 등의 키워드를 넣어줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '뷰티 및 서비스업', type: '숏', text: "고객에게 '지속가능한 미용'을 제안하는 문구 3가지를 작성해 줘. '친환경 샴푸', '유기농 염색약'을 강조해줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '뷰티 및 서비스업', type: '숏', text: "우리 필라테스 스튜디오의 '체형 교정' 프로그램을 홍보하는 문구 2개를 작성해 줘. '맞춤형 수업', '전문 강사'를 강조해 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '뷰티 및 서비스업', type: '숏', text: "우리 헬스장의 '1:1 맞춤형 PT' 프로그램을 홍보하는 인스타그램 게시글 3개를 작성해 줘. '여름 준비', '개인 트레이너'를 키워드로 넣어줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '뷰티 및 서비스업', type: '롱', text: "나는 '원주'에서 1인 미용실을 운영 중이야. '퍼스널컬러 진단'을 새로운 서비스로 추가하려고 해. 이 서비스를 소개하고 예약으로 이어지게 하는 블로그 글 초안을 작성해줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '뷰티 및 서비스업', type: '롱', text: "우리 '스킨케어 숍'의 '친환경 비건 화장품'을 소개하는 상세 페이지를 작성해 줘. '성분', '효과', '브랜드 철학'을 상세히 설명해 줘. ", tools: ['GPT', 'Gemini'], generatedResponse: {GPT: null, Gemini: null}},
+                { category: '뷰티 및 서비스업', type: '롱', text: "고객에게 '집에서 하는 올바른 두피 관리' 방법을 안내하는 블로그 글을 작성해 줘. '샴푸하는 법', '마사지', '제품 추천' 등 상세한 정보를 포함해줘.", tools: ['GPT'], generatedResponse: {GPT: null} },
+                { category: '뷰티 및 서비스업', type: '롱', text: "나는 '강릉'에서 '요가 클래스'를 운영하고 있어. '요가가 몸과 마음에 미치는 긍정적 효과'에 대해 설명하는 블로그 글을 작성해 줘. 초보자도 이해하기 쉽게 풀어줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '뷰티 및 서비스업', type: '롱', text: "우리 '필라테스 스튜디오'의 '재활 필라테스' 프로그램을 소개하는 상세 페이지를 작성해 줘. '전문성', '안전성', '맞춤형 커리큘럼'을 강조해 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {GPT: null, Gemini: null}},
+                { category: '뷰티 및 서비스업', type: '이미지', text: "자연 채광이 들어오는 편안하고 미니멀한 뷰티 살롱 인테리어 이미지를 만들어줘. 식물과 원목 가구가 조화롭게 배치되어 있어.", tools: [], generatedResponse: {PublicAI: null} },
+                { category: '뷰티 및 서비스업', type: '이미지', text: "헤어 살롱의 시술 과정 중 고객이 편안하게 앉아있는 모습을 그려줘. 헤어 디자이너가 친절하게 설명하고 있는 장면이야.", tools: [], generatedResponse: {PublicAI: null} },
+                { category: '뷰티 및 서비스업', type: '이미지', text: "따뜻한 햇살이 가득한 깨끗하고 넓은 스튜디오에서 요가 자세를 취하고 있는 사람들의 모습을 그려줘. 평화롭고 고요한 분위기야.", tools: [], generatedResponse: {PublicAI: null} },
+                { category: '뷰티 및 서비스업', type: '이미지', text: "'개인 맞춤형 스킨케어' 상담을 받고 있는 고객과 전문가의 모습을 그려줘. 고객은 행복한 표정이고, 전문가가 친절하게 설명하고 있어.", tools: [], generatedResponse: {PublicAI: null} },
+                { category: '뷰티 및 서비스업', type: '이미지', text: "푸른 잎이 가득한 숲속에서, '친환경 샴푸바'를 들고 웃고 있는 사람의 사진을 만들어 줘. 배경은 자연 친화적인 느낌이 나야 해.", tools: [], generatedResponse: {PublicAI: null} },
+                { category: '기타 서비스업', type: '숏', text: "'춘천 애견 유치원'의 하루 일과를 요약해서 인스타그램 스토리로 알릴 문구를 3가지 만들어줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '기타 서비스업', type: '숏', text: "우리 '헬스장'의 '1:1 PT' 이벤트를 홍보하는 문구를 2가지 작성해 줘. '여름 준비', '개인 트레이너'를 키워드로 넣어줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '기타 서비스업', type: '숏', text: "고객에게 '맞춤형 식단 컨설팅'을 제안하는 SNS 문구 3개를 작성해 줘. '체질 개선', '건강한 습관'을 강조해 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '기타 서비스업', type: '숏', text: "'기업 법률 자문' 서비스의 신뢰성을 강조하는 명함 문구 2개를 만들어 줘. '성공을 돕는 파트너', '든든한 법률 전문가'라는 키워드를 넣어줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '기타 서비스업', type: '숏', text: "'나만의 가구 만들기' 워크숍을 홍보하는 인스타그램 게시글을 3가지 작성해 줘. '취미', '힐링', '직접 만든 작품'을 키워드로 넣어줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '기타 서비스업', type: '롱', text: "나는 '동해'에서 '어린이 코딩 교육' 학원을 운영하고 있어. 여름방학 특강을 홍보하려고 해. 초등학생 학부모들을 설득할 수 있는 가정통신문 형식의 안내문을 작성해줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '기타 서비스업', type: '롱', text: "우리 '퍼스널 트레이닝 스튜디오'의 '개인 맞춤형 식단 관리' 프로그램을 소개하는 상세 페이지를 작성해 줘. '체계적인 코칭', '건강한 레시피'를 강조해 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {GPT: null, Gemini: null} },
+                { category: '기타 서비스업', type: '롱', text: "나는 '강원도'에서 '스타트업 법률 자문' 서비스를 운영하고 있어. '창업 초기 필수 법률 가이드'라는 주제로 블로그 포스트를 작성해 줘. '계약서', '상표권' 등 실제적인 내용을 포함해 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {GPT: null, Gemini: null}},
+                { category: '기타 서비스업', type: '롱', text: "우리 '목공 워크숍'의 '친환경 가구 제작 클래스'를 소개하는 블로그 글을 작성해 줘. '환경 보호', 'DIY', '나만의 디자인'을 강조해줘.", tools: ['GPT', 'Gemini'], generatedResponse: {GPT: null, Gemini: null}},
+                { category: '기타 서비스업', type: '롱', text: "우리 '프리랜서 세무 컨설팅' 서비스의 '세금 신고 A to Z' 블로그 포스트를 작성해 줘. '간편 신고', '절세 팁' 등 실용적인 정보를 담아 고객의 궁금증을 해결해줘.", tools: ['GPT', 'Gemini'], generatedResponse: {GPT: null, Gemini: null}},
+                { category: '기타 서비스업', type: '이미지', text: "자연 채광이 들어오는 편안하고 미니멀한 뷰티 살롱 인테리어 이미지를 만들어줘. 식물과 원목 가구가 조화롭게 배치되어 있어.", tools: [], generatedResponse: {PublicAI: null} },
+                { category: '기타 서비스업', type: '이미지', text: "현대적이고 깔끔한 '퍼스널 트레이닝 스튜디오'에서, 트레이너가 고객의 자세를 교정해주는 모습을 그려줘. 활기차고 역동적인 분위기야.", tools: [], generatedResponse: {PublicAI: null} },
+                { category: '기타 서비스업', type: '이미지', text: "전문적이고 세련된 사무실에서, 컨설턴트가 고객과 웃으며 대화하고 있는 모습을 그려줘. 배경에는 도시의 전경이 창문으로 보여.", tools: [], generatedResponse: {PublicAI: null} },
+                { category: '기타 서비스업', type: '이미지', text: "목공 워크숍에서 사람들이 나무를 깎고 조립하며 즐겁게 작업하는 모습을 그려줘. 작업 공간은 깔끔하고 정돈되어 있어.", tools: [], generatedResponse: {PublicAI: null} },
+                { category: '기타 서비스업', type: '이미지', text: "전문가와 고객이 세무 상담을 하고 있는 모습을 그려줘. 따뜻한 분위기의 사무실에서, 전문가가 고객에게 친절하게 설명하고 있어.", tools: [], generatedResponse: {PublicAI: null} },
+            ],
+            situation: [
+                { category: '홍보 및 마케팅', type: '숏', text: "이번 주말, 우리 가게에서 '특별 할인' 이벤트를 진행합니다. 친구 태그하고 방문 시 추가 할인 혜택을 제공합니다.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '홍보 및 마케팅', type: '숏', text: "새롭게 출시된 '시즌 한정 메뉴'를 소개하는 인스타그램 게시글을 작성해 줘. '신선한 재료'와 '특별한 맛'을 강조해 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '홍보 및 마케팅', type: '숏', text: "우리 가게의 '오픈 1주년' 기념 이벤트를 알리는 팝업 문구를 3가지 만들어 줘. '감사', '혜택', '추억'을 키워드로 넣어줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '홍보 및 마케팅', type: '롱', text: "나는 온라인에서 '핸드메이드 주얼리'를 판매하고 있어. '이번 시즌 신상' 주얼리 컬렉션에 대한 상세 소개 글을 블로그에 작성해 줘. 각 제품의 '디자인 컨셉'과 '재료의 특징'을 설명해 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {GPT: null, Gemini: null}},
+                { category: '홍보 및 마케팅', type: '롱', text: "우리 '애견 미용실'의 '강아지 스파 서비스'를 홍보하는 글을 작성해 줘. '스트레스 해소', '피부 개선' 등 반려동물에게 미치는 긍정적 효과를 강조해줘.", tools: ['GPT', 'Gemini'], generatedResponse: {GPT: null, Gemini: null}},
+                { category: '고객 관리', type: '숏', text: "'메뉴가 늦게 나왔다'는 고객 불만 리뷰에 대한 댓글을 작성해 줘. '진심 어린 사과'와 '재방문 시 서비스'를 약속하는 내용으로 작성해 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '고객 관리', type: '숏', text: "'제품 파손'으로 인한 고객 불만 이메일에 대한 회신을 작성해 줘. '신속한 교환/환불 처리'와 '다시 한번 사과'하는 내용으로 작성해 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '고객 관리', type: '숏', text: "'배송이 지연'되고 있다는 고객 문의에 대한 답변을 작성해 줘. '배송 상황에 대한 설명'과 '빠른 처리를 위한 노력'을 보여주는 내용으로 작성해 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '고객 관리', type: '롱', text: "'온라인 쇼핑몰'의 고객 불만 처리 'FAQ'를 작성해 줘. '배송 지연', '제품 파손', '환불/교환 절차' 등 자주 묻는 질문에 대한 답변을 자세히 알려줘.", tools: ['GPT', 'Gemini'], generatedResponse: {GPT: null, Gemini: null}},
+                { category: '고객 관리', type: '롱', text: "우리 '헬스장'의 '시설 노후화'에 대한 불만 리뷰에 대한 장문의 사과문을 작성해 줘. '고객 의견에 대한 감사', '개선 계획', '앞으로의 노력'을 포함해줘.", tools: ['GPT', 'Gemini'], generatedResponse: {GPT: null, Gemini: null}},
+                { category: '고객 관리', type: '숏', text: "'사진과 함께' 정성스럽게 남겨준 고객 리뷰에 대한 감사 댓글을 작성해 줘. '칭찬에 대한 감사'와 '재방문 시 서비스'를 약속하는 내용으로 작성해 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '고객 관리', type: '숏', text: "'직원 칭찬'이 담긴 고객 리뷰에 대한 감사 댓글을 작성해 줘. '직원에게 칭찬 내용 전달'과 '앞으로의 친절한 서비스'를 약속하는 내용으로 작성해 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '고객 관리', type: '숏', text: "'재방문'에 대한 감사 리뷰에 대한 댓글을 작성해 줘. '고객의 꾸준한 방문에 대한 감사'와 '더 나은 서비스'를 약속하는 내용으로 작성해 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '고객 관리', type: '롱', text: "우리 '온라인 쇼핑몰'에서 남겨준 '수많은 감사 리뷰'에 대한 '감사 이벤트 공지'를 작성해 줘. '고객에게 보답하는 마음'과 '이벤트 내용', '참여 방법'을 자세히 설명해 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {GPT: null, Gemini: null}},
+                { category: '고객 관리', type: '롱', text: "우리 '게스트하우스'에 남겨진 '장문의 감사 리뷰'에 대한 답글을 작성해 줘. '고객에게 감동받은 마음'과 '특별한 추억'을 함께 나눴다는 내용을 포함해줘.", tools: ['GPT', 'Gemini'], generatedResponse: {GPT: null, Gemini: null}},
+                { category: '업무 자동화 및 효율', type: '숏', text: "우리 가게 '휴무일'을 알리는 공지문을 작성해 줘. '정기 휴무'임을 명시하고 '이용에 불편을 드려 죄송하다'는 문구를 포함해 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '업무 자동화 및 효율', type: '숏', text: "우리 숍의 '영업 시간 변경' 공지문을 작성해 줘. '새로운 영업 시간'과 '고객에게 양해를 구하는' 문구를 포함해 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '업무 자동화 및 효율', type: '숏', text: "'재료 소진'으로 인한 '조기 마감' 공지문을 작성해 줘. '많은 관심에 대한 감사'와 '내일 다시 찾아달라'는 문구를 포함해 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '업무 자동화 및 효율', type: '롱', text: "'카페 메뉴 가격 인상'에 대한 공지문을 작성해 줘. '원재료 가격 상승' 등 이유를 상세히 설명하고 '고객의 양해'를 구하는 내용으로 작성해줘.", tools: ['GPT', 'Gemini'], generatedResponse: {GPT: null, Gemini: null}},
+                { category: '업무 자동화 및 효율', type: '롱', text: "우리 '펜션의 성수기 예약'에 대한 안내문을 작성해 줘. '성수기 날짜', '예약 방법', '환불 규정' 등 상세한 정보를 포함해줘.", tools: ['GPT', 'Gemini'], generatedResponse: {GPT: null, Gemini: null}},
+                { category: '창업 및 사업 기획', type: '숏', text: "'춘천 애견 유치원'의 하루 일과를 요약해서 인스타그램 스토리로 알릴 문구를 3가지 만들어줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '창업 및 사업 기획', type: '숏', text: "우리 '헬스장'의 '1:1 PT' 이벤트를 홍보하는 문구를 2가지 작성해 줘. '여름 준비', '개인 트레이너'를 키워드로 넣어줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '창업 및 사업 기획', type: '숏', text: "고객에게 '맞춤형 식단 컨설팅'을 제안하는 SNS 문구 3개를 작성해 줘. '체질 개선', '건강한 습관'을 강조해 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '창업 및 사업 기획', type: '롱', text: "나는 '동해'에서 '어린이 코딩 교육' 학원을 운영하고 있어. 여름방학 특강을 홍보하려고 해. 초등학생 학부모들을 설득할 수 있는 가정통신문 형식의 안내문을 작성해줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '창업 및 사업 기획', type: '롱', text: "우리 '퍼스널 트레이닝 스튜디오'의 '개인 맞춤형 식단 관리' 프로그램을 소개하는 상세 페이지를 작성해 줘. '체계적인 코칭', '건강한 레시피'를 강조해 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {GPT: null, Gemini: null} },
+                { category: '공지문', type: '숏', text: "우리 가게 '휴무일'을 알리는 공지문을 작성해 줘. '정기 휴무'임을 명시하고 '이용에 불편을 드려 죄송하다'는 문구를 포함해 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '공지문', type: '숏', text: "우리 숍의 '영업 시간 변경' 공지문을 작성해 줘. '새로운 영업 시간'과 '고객에게 양해를 구하는' 문구를 포함해 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '공지문', type: '숏', text: "'재료 소진'으로 인한 '조기 마감' 공지문을 작성해 줘. '많은 관심에 대한 감사'와 '내일 다시 찾아달라'는 문구를 포함해 줘.", tools: ['GPT', 'Gemini'], generatedResponse: {Gemini: null, GPT: null} },
+                { category: '공지문', type: '롱', text: "'카페 메뉴 가격 인상'에 대한 공지문을 작성해 줘. '원재료 가격 상승' 등 이유를 상세히 설명하고 '고객의 양해'를 구하는 내용으로 작성해줘.", tools: ['GPT', 'Gemini'], generatedResponse: {GPT: null, Gemini: null}},
+                { category: '공지문', type: '롱', text: "우리 '펜션의 성수기 예약'에 대한 안내문을 작성해 줘. '성수기 날짜', '예약 방법', '환불 규정' 등 상세한 정보를 포함해줘.", tools: ['GPT', 'Gemini'], generatedResponse: {GPT: null, Gemini: null}},
+            ]
+        };
+
+        const getToolIcon = (tool) => {
+            if (tool === 'Gemini') return 'G';
+            if (tool === 'GPT') return 'C';
+            if (tool === 'PerplexityAI') return 'P';
+            if (tool === 'Gamma App') return 'G';
+            return '';
+        };
+
+        const getTypePillClass = (type) => {
+            switch(type) {
+                case '숏':
+                case '홍보 및 마케팅':
+                case '예약 문의':
+                case '이메일':
+                case '로고 아이디어':
+                    return 'bg-blue-100 text-blue-800';
+                case '롱':
+                case '이벤트 기획':
+                case '고객 관리':
+                case '사업 아이디어':
+                case '카드뉴스':
+                    return 'bg-green-100 text-green-800';
+                case '이미지':
+                case '업무 자동화 및 효율':
+                case '창업 및 사업 기획':
+                case '공지문':
+                case '숏폼 스크립트':
+                    return 'bg-purple-100 text-purple-800';
+                default:
+                    return 'bg-gray-100 text-gray-800';
+            }
+        };
+
+        // 텍스트 생성을 위한 Gemini API 호출 함수 (Google Search grounding 추가)
+        async function generateTextResponse(prompt, systemPrompt) {
+            // 여기에 AI 모델 API 키를 넣어주세요. 보안을 위해 환경 변수 등으로 관리하는 것이 좋습니다.
+            const apiKey = "AIzaSyCzv_DDceSvLE4Ys0BM6O-GNcilxhl3r3w";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }],
+                tools: [{ "google_search": {} }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const result = await response.json();
+                const candidate = result.candidates?.[0];
+                return candidate?.content?.parts?.[0]?.text || "답변을 생성할 수 없습니다. 다시 시도해주세요.";
+            } catch (error) {
+                console.error("API 호출 중 오류 발생:", error);
+                return `오류 발생: ${error.message}. 잠시 후 다시 시도해 주세요.`;
+            }
+        }
+        
+        const createPromptCard = (prompt, index, type) => {
+            const toolIcons = prompt.tools.map(tool => {
+                const toolIconCode = getToolIcon(tool);
+                return `<div title="${tool}" class="tool-icon w-7 h-7 rounded-full bg-gray-700 text-white text-sm flex items-center justify-center font-mono" data-tool="${tool}" data-index="${index}" data-type="${type}" data-prompt-text="${prompt.text}">
+                    ${toolIconCode}
+                </div>`;
+            }).join('');
+            
+            let imageLink = '';
+            if (prompt.type === '이미지') {
+                imageLink = `<a href="https://gemini.google.com/app" target="_blank" title="Gemini 이미지 생성 바로가기" class="ml-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400 hover:text-gray-700 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                </a>`;
+            }
+
+            return `
+                <div class="prompt-card bg-white p-5 rounded-lg shadow-sm flex flex-col cursor-pointer h-60" data-category="${prompt.category}" data-type="${prompt.type}">
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="text-sm font-semibold px-2 py-1 rounded-full ${getTypePillClass(prompt.type)}">${prompt.type}</span>
+                        <div class="flex items-center space-x-1">${toolIcons} ${imageLink}</div>
+                    </div>
+                    <p class="text-gray-700 flex-grow text-sm leading-relaxed mb-4 overflow-y-auto">${prompt.text.replace(/'([^']*)'/g, '<strong>"$1"</strong>')}</p>
+                    
+                    <button class="copy-btn bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-md transition text-sm mt-auto">
+                        프롬프트 복사하기
+                    </button>
+
+                    <div class="ai-response-container mt-4 pt-4 hidden">
+                        <span class="close-btn" data-action="close">&times;</span>
+                        <div class="response-content text-sm text-gray-700 leading-snug"></div>
+                    </div>
+                </div>`;
+        };
+
+        const setupPage = (pageId, promptType, filtersId, promptsId) => {
+            const filtersContainer = document.getElementById(filtersId);
+            const promptsContainer = document.getElementById(promptsId);
+
+            const categories = [...new Set(promptData[promptType].map(p => p.category))];
+            
+            filtersContainer.innerHTML = `<button class="filter-btn filter-btn-active text-sm px-4 py-2 rounded-full bg-gray-200 hover:bg-gray-300 transition" data-category="all">전체</button>` + 
+                categories.map(cat => `<button class="filter-btn text-sm px-4 py-2 rounded-full bg-gray-200 hover:bg-gray-300 transition" data-category="${cat}">${cat}</button>`).join('');
+
+            const renderPrompts = (selectedCategory, selectedType) => {
+                const filteredPrompts = promptData[promptType].filter(p => 
+                    (selectedCategory === 'all' || p.category === selectedCategory) &&
+                    (selectedType === 'all' || p.type === selectedType)
+                );
+                promptsContainer.innerHTML = filteredPrompts.map((p, i) => createPromptCard(p, i, promptType)).join('');
+            };
+
+            filtersContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('filter-btn')) {
+                    const category = e.target.dataset.category;
+                    filtersContainer.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('filter-btn-active'));
+                    e.target.classList.add('filter-btn-active');
+                    const selectedType = pageId === 'page-industry' ? document.getElementById('industry-sort-by-type').value : 'all';
+                    renderPrompts(category, selectedType);
+                }
+            });
+
+            if (pageId === 'page-industry') {
+                const sortDropdown = document.getElementById('industry-sort-by-type');
+                sortDropdown.addEventListener('change', (e) => {
+                    const selectedType = e.target.value;
+                    const selectedCategory = filtersContainer.querySelector('.filter-btn-active').dataset.category;
+                    renderPrompts(selectedCategory, selectedType);
+                });
+            }
+
+            // Initial load of prompts
+            renderPrompts('all', 'all');
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setupPage('page-industry', 'industry', 'industry-filters', 'industry-prompts');
+            setupPage('page-situation', 'situation', 'situation-filters', 'situation-prompts');
+
+            const navButtons = document.querySelectorAll('.nav-button');
+            const pages = document.querySelectorAll('.page-content');
+            
+            navButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    navButtons.forEach(btn => btn.classList.remove('nav-active'));
+                    button.classList.add('nav-active');
+                    
+                    pages.forEach(page => {
+                        if (page.id === button.dataset.target) {
+                            page.classList.remove('hidden');
+                        } else {
+                            page.classList.add('hidden');
+                        }
+                    });
+                    if (button.dataset.target === 'page-industry') {
+                        setupPage('page-industry', 'industry', 'industry-filters', 'industry-prompts');
+                    } else if (button.dataset.target === 'page-situation') {
+                        setupPage('page-situation', 'situation', 'situation-filters', 'situation-prompts');
+                    }
+                });
+            });
+
+            document.body.addEventListener('click', async (e) => {
+                if (e.target.classList.contains('copy-btn')) {
+                    const card = e.target.closest('.prompt-card');
+                    const promptText = card.querySelector('p').innerText.replace(/"/g, '');
+                    
+                    const tempInput = document.createElement('textarea');
+                    tempInput.value = promptText;
+                    document.body.appendChild(tempInput);
+                    tempInput.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(tempInput);
+
+                    const originalText = e.target.textContent;
+                    e.target.textContent = '복사 완료!';
+                    
+                    setTimeout(() => {
+                        e.target.textContent = originalText;
+                    }, 1500);
+
+                    // 스크롤 기능 추가
+                    const currentPage = document.querySelector('.page-content:not(.hidden)');
+                    let aiToolsSection = null;
+                    if (currentPage) {
+                        if (currentPage.id === 'page-industry') {
+                            aiToolsSection = document.getElementById('ai-tools-industry-section');
+                        } else if (currentPage.id === 'page-situation') {
+                            aiToolsSection = document.getElementById('ai-tools-situation-section');
+                        }
+                    }
+
+                    if (aiToolsSection) {
+                        aiToolsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+
+                if (e.target.dataset.action === 'close') {
+                    const responseContainer = e.target.closest('.ai-response-container');
+                    responseContainer.classList.add('hidden');
+                    return;
+                }
+
+                if (e.target.classList.contains('tool-icon')) {
+                    const card = e.target.closest('.prompt-card');
+                    const responseContainer = card.querySelector('.ai-response-container');
+                    const responseContent = card.querySelector('.response-content');
+                    const promptText = e.target.dataset.promptText;
+                    const tool = e.target.dataset.tool;
+                    const index = e.target.dataset.index;
+                    const type = e.target.dataset.type;
+
+                    const originalIndex = promptData[type].findIndex(p => p.text === promptText);
+
+                    if (promptData[type][originalIndex].generatedResponse[tool]) {
+                        if (tool === 'PublicAI') {
+                            responseContent.innerHTML = `<img src="${promptData[type][originalIndex].generatedResponse[tool]}" alt="생성된 이미지" class="rounded-lg max-w-full h-auto mx-auto border border-gray-300">`;
+                        } else {
+                            responseContent.innerHTML = promptData[type][originalIndex].generatedResponse[tool].replace(/\n/g, '<br>');
+                        }
+                        responseContainer.classList.remove('hidden');
+                        return;
+                    }
+                    
+                    responseContainer.classList.remove('hidden');
+                    responseContent.innerHTML = `<div class="flex flex-col justify-center items-center py-4"><div class="loading-spinner"></div><span class="mt-2 text-gray-500">답변 생성 중...</span></div>`;
+                    
+                    let response = null;
+                    if (tool === 'Gemini' || tool === 'GPT') {
+                        const systemPrompt = "당신은 강원도 소상공인, 예비 창업자들을 돕는 AI 비즈니스 전문가입니다. 한국어로 친절하고 명확하게 답변을 제공합니다. 사용자의 질문에 맞춰 최대한 상세하고 유용한 답변을 제공하세요.";
+                        const textResponse = await generateTextResponse(promptText, systemPrompt);
+                        response = textResponse;
+                        responseContent.innerHTML = textResponse.replace(/\n/g, '<br>');
+                    }
+
+                    promptData[type][originalIndex].generatedResponse[tool] = response;
+                }
+            });
+        });
+
+        // 이스터에그 기능 구현
+        const easterEggTrigger = document.getElementById('easter-egg-trigger');
+        const easterEggMessage = document.getElementById('easter-egg-message');
+        const easterEggSequence = 'abcde';
+        let typedSequence = '';
+        let isListeningForKeys = false;
+
+        const handleKeyDown = (event) => {
+            if (!isListeningForKeys) return;
+
+            const key = event.key.toLowerCase();
+            
+            if (key === easterEggSequence[typedSequence.length]) {
+                typedSequence += key;
+                if (typedSequence === easterEggSequence) {
+                    easterEggMessage.classList.remove('hidden');
+                    isListeningForKeys = false;
+                    document.body.removeEventListener('keydown', handleKeyDown);
+                }
+            } else {
+                typedSequence = '';
+            }
+        };
+
+        easterEggTrigger.addEventListener('click', () => {
+            if (!isListeningForKeys) {
+                typedSequence = '';
+                isListeningForKeys = true;
+                document.body.addEventListener('keydown', handleKeyDown);
+            }
+        });
+        <!-- adsp hy00nj29 -->
+    </script>
+</body>
+</html>
